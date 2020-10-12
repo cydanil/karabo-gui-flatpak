@@ -1,0 +1,44 @@
+app-id: eu.xfel.karabo.gui
+runtime: org.kde.Platform
+runtime-version: '5.15'
+sdk: org.kde.Sdk
+command: karabo-gui
+
+finish-args:
+  - --filesystem=host
+  - --socket=x11
+  - --socket=wayland
+  - --share=network
+modules:
+  - name: cpython
+    sources:
+      - type: archive
+        url: https://www.python.org/ftp/python/3.6.6/Python-3.6.6.tar.xz
+        sha256: d79bc15d456e73a3173a2938f18a17e5149c850ebdedf84a78067f501ee6e16f 
+
+  - name: Dependencies
+    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
+    build-commands:
+        - pip3 install wheel
+        - pip3 install numpy==1.15
+        - pip3 install PyQt5==5.9.2 pyqtgraph==0.11.0 qtconsole==4.6.0 ipython==7.13 ipykernel==5.2.0 scipy==1.4 cycler==0.10.0 traits==4.6.0 lxml==4.4.1 requests==2.22 python-dateutil==2.8 lttbc==0.1.9 jupyter_client==5.3.4 pint
+
+  - name: karabo-gui
+    buildsystem: simple
+    build-options:
+      build-args:
+        - --filesystem=host
+    build-commands:
+      - cp -r src/pythonGui/karabogui /app/lib/python3.6/site-packages/karabogui
+      - cp -r src/pythonKarabo/karabo /app/lib/python3.6/site-packages/karabo
+      - echo "version = '99.9.9'" > /app/lib/python3.6/site-packages/karabogui/_version.py
+      - python3 src/pythonGui/setup.py install --prefix=/app
+      - install -Dm644 /home/runner/work/karabo-gui-flatpak/eu.xfel.karabo.gui.desktop -t /app/share/applications/
+      - install -Dm644 /home/runner/work/karabo-gui-flatpak/eu.xfel.karabo.gui.png -t /app/share/icons/hicolor/scalable/apps/
+
+    sources:
+      - type: git
+        url:  https://{USER}:{PASS}@git.xfel.eu/gitlab/Karabo/Framework.git

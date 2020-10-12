@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+
+Name=Karabo Gui
+GenericName=European XFEL Karabo Gui
+X-GNOME-FullName=EuXFEL Karabo Gui
+Categories=Science;Education;
+Comment=Move some motors left, some right.
+Icon=eu.xfel.karabo.gui
+
+Exec=karabo-gui
+Terminal=false
+StartupNotify=true
