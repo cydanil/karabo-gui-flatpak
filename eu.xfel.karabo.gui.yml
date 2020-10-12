@@ -22,6 +22,7 @@ modules:
       build-args:
         - --share=network
     build-commands:
+        - python3 -m pip install --upgrade pip
         - pip3 install wheel
         - pip3 install numpy==1.15
         - pip3 install PyQt5==5.9.2 pyqtgraph==0.11.0 qtconsole==4.6.0 ipython==7.13 ipykernel==5.2.0 scipy==1.4 cycler==0.10.0 traits==4.6.0 lxml==4.4.1 requests==2.22 python-dateutil==2.8 lttbc==0.1.9 jupyter_client==5.3.4 pint
@@ -36,9 +37,18 @@ modules:
       - cp -r src/pythonKarabo/karabo /app/lib/python3.6/site-packages/karabo
       - echo "version = '99.9.9'" > /app/lib/python3.6/site-packages/karabogui/_version.py
       - python3 src/pythonGui/setup.py install --prefix=/app
-      - install -Dm644 /home/runner/work/karabo-gui-flatpak/eu.xfel.karabo.gui.desktop -t /app/share/applications/
-      - install -Dm644 /home/runner/work/karabo-gui-flatpak/eu.xfel.karabo.gui.png -t /app/share/icons/hicolor/scalable/apps/
 
     sources:
       - type: git
         url:  https://{USER}:{PASS}@git.xfel.eu/gitlab/Karabo/Framework.git
+
+  - name: desktop-files
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 eu.xfel.karabo.gui.desktop -t /app/share/applications/
+      - install -Dm644 eu.xfel.karabo.gui.png -t /app/share/icons/hicolor/scalable/apps/
+    sources:
+        - type: file
+          path: eu.xfel.karabo.gui.desktop
+        - type: file
+          path: eu.xfel.karabo.gui.png
