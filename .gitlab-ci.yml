@@ -1,0 +1,17 @@
+image: europeanxfel/karabo-ci:ubuntu-20
+
+before_script:
+  - export http_proxy="http://exflwgs06.desy.de:3128/"
+  - export https_proxy="http://exflwgs06.desy.de:3128/"
+  - apt-get install flatpak flatpak-builder -y
+  - flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
+  - flatpak install flathub org.kde.Platform//5.15 org.kde.Sdk//5.15 -y
+
+flatpak:
+  script:
+    - flatpak-builder --repo=repo --force-clean build-dir eu.xfel.karabo.gui.yml
+    - flatpak build-bundle repo karabo.gui.flatpak eu.xfel.karabo.gui
+  artifacts:
+    paths:
+      - karabo.gui.flatpak
+    expire_in: 1 week
